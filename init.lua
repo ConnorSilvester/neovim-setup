@@ -1,0 +1,5 @@
+require 'config.vim-options'
+require 'config.lazy'
+require 'config.vim-functions'
+require 'config.vim-keybinds'
+require 'config.vim-commands'
