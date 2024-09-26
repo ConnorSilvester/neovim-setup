@@ -1,3 +1,23 @@
+local function disable_spell_check_for_filetypes()
+    local ignore_spell_filetypes = { 'lua' }
+
+    local ft = vim.bo.filetype
+    if vim.tbl_contains(ignore_spell_filetypes, ft) then
+        vim.opt.spell = false
+    end
+end
+
+vim.api.nvim_create_autocmd('FileType', {
+    callback = disable_spell_check_for_filetypes,
+})
+
+vim.cmd [[
+augroup MySpellCheck
+    autocmd!
+    autocmd FileType * syntax match SpellCheck /\w\+/
+augroup END
+]]
+
 vim.api.nvim_create_autocmd('TextYankPost', {
     group = vim.api.nvim_create_augroup('highlight_yank', {}),
     desc = 'Hightlight selection on yank',

@@ -47,6 +47,15 @@ vim.api.nvim_set_keymap('n', '<Tab>', [[:lua insert_spaces_normal()<CR>]], { nor
 vim.api.nvim_set_keymap('n', '<CR>', 'o<ESC>', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '<BS>', 'O<ESC>', { noremap = true, silent = true })
 
+-- Spell check remaps
+vim.api.nvim_set_keymap('n', '<leader>ga', 'zg', { noremap = true, silent = true, desc = 'Add word to spell list' })
+vim.api.nvim_set_keymap('n', '<leader>gr', 'zug', { noremap = true, silent = true, desc = 'Remove word from spell list' })
+vim.api.nvim_set_keymap('n', '<leader>gg', 'z=', { noremap = true, silent = true, desc = 'Replace spelling mistake' })
+vim.api.nvim_set_keymap('n', '<leader>gG', ':spellr<CR>', { noremap = true, silent = true, desc = 'Replace spelling mistake' })
+vim.api.nvim_set_keymap('n', '<leader>gn', ']s', { noremap = true, silent = true, desc = 'Next spelling error' })
+vim.api.nvim_set_keymap('n', '<leader>gp', '[s', { noremap = true, silent = true, desc = 'Previous spelling error' })
+vim.api.nvim_set_keymap('n', '<leader>gt', ':set spell!<CR>', { noremap = true, silent = true, desc = 'Toggle spell checking' })
+
 -- Normal Vim remaps
 vim.api.nvim_set_keymap('n', 'dx', 'dd', { noremap = true, silent = true })
 

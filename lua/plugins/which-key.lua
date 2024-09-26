@@ -48,6 +48,7 @@ return { -- Useful plugin to show you pending keybinds.
             { '<leader>w', group = '[W]orkspace' },
             { '<leader>t', group = '[T]erminal' },
             { '<leader>e', group = '[E]xplorer' },
+            { '<leader>g', group = 'Splling' },
 
             { '<leader>d', group = '[D]ebug' },
             { '<leader>dd', desc = 'Start gdb (C/C++)' },
