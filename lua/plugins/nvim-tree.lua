@@ -6,12 +6,14 @@ return {
         'nvim-tree/nvim-web-devicons',
     },
     config = function()
-        require('nvim-tree').setup {}
-
         vim.g.loaded_netrw = 1
         vim.g.loaded_netrwPlugin = 1
 
         require('nvim-tree').setup {
+            update_focused_file = {
+                enable = true,
+                update_cwd = false,
+            },
             sort = {
                 sorter = 'case_sensitive',
             },
@@ -20,6 +22,7 @@ return {
                 relativenumber = true,
             },
             renderer = {
+                highlight_opened_files = 'name',
                 indent_markers = {
                     enable = true,
                 },

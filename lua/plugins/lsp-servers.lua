@@ -18,7 +18,7 @@ return {
                 end
 
                 map('gd', require('telescope.builtin').lsp_definitions, '[G]oto [D]efinition')
-                map('gr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
+                map('gr', require('telescope.builtin').lsp_references, '[G]oto LSP Options')
                 map('gI', require('telescope.builtin').lsp_implementations, '[G]oto [I]mplementation')
                 map('<leader>sa', require('telescope.builtin').lsp_document_symbols, 'Search Alias')
                 map('<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
@@ -60,12 +60,38 @@ return {
             cmake = {},
             bashls = {},
             solargraph = {},
+            hls = {},
+            html = {},
+            lemminx = {},
+            sqls = {},
             lua_ls = {
                 settings = {
                     Lua = {
                         completion = {
                             callSnippet = 'Replace',
                         },
+                    },
+                },
+            },
+            pyright = {
+                settings = {
+                    python = {
+                        analysis = {
+                            autoSearchPaths = true,
+                            typeCheckingMode = 'strict', -- Options: "off", "basic", "strict"
+                            diagnosticMode = 'workspace', -- Options: "openFilesOnly", "workspace"
+                            useLibraryCodeForTypes = true,
+                        },
+                    },
+                },
+            },
+            gopls = {
+                settings = {
+                    gopls = {
+                        analyses = {
+                            unusedparams = true,
+                        },
+                        staticcheck = true,
                     },
                 },
             },
@@ -81,6 +107,18 @@ return {
             'cmake-language-server',
             'bash-language-server',
             'solargraph',
+            'haskell-language-server',
+            'fourmolu',
+            'hlint',
+            'html-lsp',
+            'pyright',
+            'black',
+            'shfmt',
+            'bashls',
+            'gopls',
+            'goimports',
+            'sqls',
+            'lemminx',
         })
         require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
@@ -100,9 +138,7 @@ return {
             root_dir = require('lspconfig.util').root_pattern('.git', 'pom.xml', 'build.gradle'),
             settings = {
                 java = {
-                    contentProvider = {
-                        preferred = 'fernflower',
-                    },
+                    contentProvider = { preferred = 'fernflower' },
                     codeGeneration = {
                         toString = {
                             includePackage = true,
@@ -122,6 +158,12 @@ return {
                     },
                 },
             },
+            init_options = {
+                bundles = {
+                    vim.fn.glob 'path_to_java_debug_jar/java-debug.jar',
+                    vim.fn.glob 'path_to_test_jar/java-test.jar',
+                },
+            },
         }
 
         require('lspconfig').cmake.setup {
@@ -139,6 +181,40 @@ return {
             cmd = { 'solargraph', 'stdio' },
             root_dir = require('lspconfig.util').root_pattern '.git',
             filetypes = { 'ruby' },
+        }
+        require('lspconfig').pyright.setup {
+            root_dir = function()
+                return vim.loop.cwd() -- Use the current working directory as the root directory
+            end,
+        }
+        require('lspconfig').hls.setup {
+            root_dir = function()
+                return vim.loop.cwd() -- Use the current working directory as the root directory
+            end,
+        }
+        require('lspconfig').bashls.setup {
+            cmd = { 'bash-language-server', 'start' },
+            root_dir = require('lspconfig.util').root_pattern '.git',
+            filetypes = { 'sh', 'make' }, -- Add 'make' here
+        }
+        require('lspconfig').sqls.setup {
+            settings = {
+                sqls = {
+                    config_file = '~/.config/sqls/sqls.yaml',
+                },
+            },
+        }
+        require('lspconfig').lemminx.setup {
+            cmd = { 'lemminx' },
+            root_dir = function(fname)
+                return vim.loop.cwd()
+            end,
+            filetypes = { 'html', 'xml', 'xhtml', 'thymeleaf' },
+            settings = {
+                xml = {
+                    schemas = {},
+                },
+            },
         }
     end,
 }

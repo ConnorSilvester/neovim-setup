@@ -88,3 +88,73 @@ function _G.insert_spaces_normal()
 
     vim.fn.cursor(line, current_col + #spaces)
 end
+
+function _G.create_note()
+    local title = vim.fn.input 'Enter note title: '
+    local note_dir = '/home/connor/MainFiles/Obsidian/Main/inbox'
+
+    -- Format the file name: replace spaces with underscores
+    local file_name = title:gsub(' ', '_')
+    local formatted_file_name = os.date '%d-%m-%Y' .. '_' .. file_name .. '.md'
+
+    -- Construct the full file path
+    local note_filename = note_dir .. '/' .. formatted_file_name
+
+    -- Create the file
+    local file = io.open(note_filename, 'w')
+    if file then
+        file:close()
+
+        -- Change to the note directory and open the note
+        vim.cmd('cd ' .. note_dir)
+        vim.cmd('edit ' .. note_filename)
+    else
+        print('Error creating note: ' .. note_filename)
+    end
+end
+
+function _G.RemoveBeforePipe()
+    -- Get the current line
+    local line = vim.fn.getline '.'
+    -- Use pattern matching to extract the part after the '|'
+    local new_line = line:gsub('%[%[(.-)%|(.+)%]%]', '[[%2]]')
+    -- Set the new line back to the buffer
+    vim.fn.setline('.', new_line)
+end
+
+vim.api.nvim_create_autocmd('VimEnter', {
+    callback = function()
+        vim.api.nvim_set_keymap('n', '<C-i>', '<C-i>', { noremap = true, desc = 'Go forward in jump list' })
+    end,
+})
+
+function _G.MultiCursorBackspace()
+    -- Check if the `multiple_cursors#get_positions` function exists
+    if vim.fn.exists('*multiple_cursors#get_positions') == 1 then
+        local cursor_positions = vim.fn['multiple_cursors#get_positions']()
+        local count = #cursor_positions
+
+        -- If Telescope is active or only one cursor is present, perform a normal backspace
+        if vim.bo.filetype == 'TelescopePrompt' or count <= 1 then
+            -- Feed the actual backspace key for normal behavior
+            vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<BS>', true, false, true), 'n', true)
+        else
+            -- Multiple cursors are active; perform multi-cursor backspace manually
+            for _, pos in ipairs(cursor_positions) do
+                vim.api.nvim_win_set_cursor(0, pos)  -- Move to each cursor position
+                vim.cmd('normal! X')  -- Delete the character before each cursor
+            end
+        end
+    else
+        -- If `multiple_cursors#get_positions` doesn't exist, use normal backspace behavior
+        vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<BS>', true, false, true), 'n', true)
+    end
+end
+
+function _G.ClearAllCursors()
+    if vim.fn.exists('*multiple_cursors#reset') == 1 then
+        vim.fn['multiple_cursors#reset']()  -- Clear all cursors if the function exists
+    else
+        print("Multiple cursors plugin function not found.")
+    end
+end

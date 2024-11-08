@@ -9,6 +9,7 @@ vim.g.have_nerd_font = true
 vim.opt.list = true
 vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
 vim.opt.signcolumn = 'yes'
+vim.opt.relativenumber = true
 vim.opt.number = true
 vim.opt.wrap = false
 vim.opt.breakindent = true
